@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conference Ticket Generator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <a href="/">
+            <img src="/images/logo-full.svg" alt="Logo">
+        </a>
+    </header>
+    <main>
+        <div class="svg-container">
+            <img src="/images/pattern-squiggly-line-top.svg" alt="Decorative squiggly line">
+        </div>
+        <div class="svg-container1">
+            <img src="/images/pattern-squiggly-line-bottom.svg" alt="Decorative squiggly line">
+        </div>  
+        <section id="form-section">
+            <h1>Your Journey to Coding Conf 2025 Starts Here!</h1>
+            <p>Secure your spot at next year’s biggest coding conference.</p>
+            <form id="ticket-form">
+                <label for="avatar-upload">Upload Avatar</label>
+                <div class="upload-field" id="uploadField">
+                    <input type="file" id="fileInput" class="file-input" name="avatar" accept=".jpg, .jpeg, .png" required>
+                    <div class="upload-content" id="uploadContent">
+                        <div class="upload-icon" id="uploadIcon">
+                            <img src="/images/icon-upload.svg" alt="Upload icon">
+                        </div>
+                        <p class="upload-text" id="uploadText">Drag and drop or click to upload</p>
+                    </div>
+                    <div class="button-group" id="buttonGroup" style="display: none;">
+                      <button type="button" id="removeImage">Remove image</button>
+                      <button type="button" id="changeImage">Change image</button>
+                    </div>
+                </div>                  
+                <small>
+                    <img src="/images/icon-info.svg" alt="Upload info icon">
+                    Upload your photo (JPG or PNG, max size: 5MB).
+                </small>
+                <label for="full-name">Full Name</label>
+                <input type="text" id="full-name" name="fullName" required>
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" placeholder="example@email.com" required>
+                <div id="email-error" class="error-message"></div>
+                <label for="github-username">GitHub Username</label>
+                <input type="text" id="github-username" name="githubUsername" placeholder="@yourusername" required>
+                <button type="submit" id="submit-button">Generate My Ticket</button>
+            </form>
+        </section>
+        <section id="ticket-section" class="hidden">
+            <h1>Congrats, <span id="ticket-name">User</span>! Your ticket is ready.</h1>
+            <p class="ticket-text">
+              We’ve emailed your ticket to <span id="ticket-email">email@example.com</span> and will send updates in the run up to the event.
+            </p>
+            <div class="ticket">
+              <img class="ticket-pattern" src="./images/pattern-ticket.svg" alt="Ticket Background">
+              <div class="ticket-content">
+                <div class="ticket-header">
+                  <img src="./images/logo-full.svg" alt="Logo">
+                  <p>Jan 31, 2025 / Austin, TX</p>
+                </div>
+                <div class="ticket-body">
+                  <img id="ticket-avatar" src="./images/image-avatar.jpg" alt="User Avatar">
+                  <div class="ticket-detail">
+                    <p id="ticket-full-name"></p>
+                    <p id="ticket-github">
+                        <span>
+                            <img src="./images/icon-github.svg" alt="Github logo">
+                        </span>
+                        <span>@</span>
+                        <span id="ticket-github-username"></span>
+                    </p>
+                  </div>
+                </div>
+                <div class="ticket-code">
+                  <p>#40609</p>
+                </div>
+              </div>
+            </div>
+          </section>            
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>
