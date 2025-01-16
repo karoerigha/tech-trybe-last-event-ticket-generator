@@ -56,7 +56,6 @@ body {
     color: var(--neutral-0);
     background: url('./images/background-desktop.png') no-repeat center center;
     background-size: cover;
-    height: 100vh;
     margin: 0;
     padding: 0;
 }
@@ -387,7 +386,6 @@ button:focus,
     }
 
     .svg-container1 {
-        bottom: -80px;
         left: 0;
     }
 
