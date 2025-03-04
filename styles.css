@@ -415,8 +415,7 @@
     justify-content: space-between;
   margin: 0 auto;
   padding: 0 16px;
-      width: 100%;
-     
+      width: 100%; 
       box-sizing: border-box;
     }
     .logo-ticket{
@@ -518,7 +517,7 @@
     .ticket-body img {
       width: 75px;
       height: 75px;
-      margin: 6px 6px 0px 0px;
+      margin: 10px 6px 0px 8px;
     }
   
     .ticket-code {
@@ -532,7 +531,6 @@
       width: 104px ;
       height: 142px ;
       margin-top: 5px;
-       
       font-size: 10px;
       justify-content: center;
     }

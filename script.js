@@ -177,9 +177,11 @@ document.addEventListener("DOMContentLoaded", () => {
     // Send ticket data to backend (requires an API endpoint at /api/tickets)
     async function sendTicketData(ticketData) {
         try {
-          const response = await fetch("https://script.google.com/macros/s/AKfycbxcIrCAyafq_7bgD6PjZeHvtvwQSrj75yc1AU3KWA6sIH6xpjzRPz4ztfJ7LImUcG8VNQ/exec", {
+          const response = await
+         fetch
+  ("https://script.google.com/macros/s/AKfycbzGoGAzj6iOcLa1B3M_h25rvjKel_zBZZ1xvCa_jzecXfG5tQnWprqmVWbJrMnTeWuLiw/exec", {
             method: "POST",
-            mode: "cors",
+            mode: "no-cors",
             headers: {
               "Content-Type": "application/json",
             },
@@ -211,7 +213,18 @@ document.addEventListener("DOMContentLoaded", () => {
         ticketNumber: ticketNumber,
         ticketAvatar: ticketAvatar,
       };
-  
+  // Generate ticket image using html2canvas
+    async function generateTicketImage() {
+      const ticketElement = document.querySelector('.ticket');
+      const canvas = await html2canvas(ticketElement);
+      return canvas.toDataURL("image/png");
+    }
+      // Generate an image of the ticket and update the download link
+      const ticketImageData = await generateTicketImage();
+      downloadLink.href = ticketImageData;
+      downloadLink.download = "TechTrybeGalaTicket.png";
+      downloadLink.style.display = "block";
+      
       // Update ticket section
       ticketNicknameElem.textContent = ticketData.nickname;
       ticketEmailElem.textContent = ticketData.email;
@@ -228,12 +241,12 @@ document.addEventListener("DOMContentLoaded", () => {
         ? "I'll be Attending Thanksgiving also"
         : null ;
       ticketNumberElem.textContent = ticketData.ticketNumber;
-  
-      // Generate PDF and update download link
-      const pdfUrl = await generatePDF(ticketData);
-      downloadLink.href = pdfUrl;
-      downloadLink.download = "TechTrybeGalaTicket.pdf";
-      downloadLink.style.display = "block";
+    
+      // // Generate PDF and update download link
+      // const pdfUrl = await generatePDF(ticketData);
+      // downloadLink.href = pdfUrl;
+      // downloadLink.download = "TechTrybeGalaTicket.pdf";
+      // downloadLink.style.display = "block";
   
       ticketSection.classList.remove("hidden");
       ticketSection.scrollIntoView({ behavior: "smooth" });
