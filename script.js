@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const uploadInfo = document.getElementById("uploadInfo");
   const emailError = document.getElementById("email-error");
   const submitButton = document.getElementById("submit-button");
-  
+
   // Ticket section elements
   const ticketSection = document.getElementById("ticket-section");
   const ticketNicknameElem = document.getElementById("ticket-nickname");
@@ -28,32 +28,35 @@ document.addEventListener("DOMContentLoaded", () => {
   const ticketThanksgivingElem = document.getElementById("ticket-thanksgiving");
   const ticketNumberElem = document.getElementById("ticket-number");
   
+  // Download link and optional screenshot button
+  const downloadLink = document.getElementById("download-link");
   const screenShotBtn = document.getElementById("screen-shot-button");
-  // Form section for hiding after submission
+
+  // Form section (to hide it after ticket generation)
   const formSection = document.getElementById("form-section");
 
+  // Optional: Avatar preview container
   const avatarPreviewContainer = document.getElementById('avatarPreviewContainer');
   const avatarPreview = document.getElementById('avatarPreview');
   
-  // When the user selects a file (preview)
+  // File input event: update image preview
   fileInput.addEventListener('change', function() {
     const file = this.files[0];
     if (file) {
       console.log("File selected for preview");
-      uploadIcon.innerHTML = ""; // clear existing icon
+      uploadIcon.innerHTML = ""; // Clear existing image
       const newImg = document.createElement("img");
       newImg.src = URL.createObjectURL(file);
-      newImg.style.maxWidth = "100px"; // adjust as needed
+      newImg.style.maxWidth = "100px"; // Preview size
       uploadIcon.appendChild(newImg);
     }
   });
   
-  // Handle file input change with validation
+  // Validate file input (allow up to 2MB)
   fileInput.addEventListener("change", (event) => {
     const file = event.target.files[0];
     resetUploadInfo();
     if (file) {
-      // Allow files up to 2MB
       if (file.size > 2 * 1024 * 1024) {
         uploadInfo.innerHTML = `<img src="/images/icon-info-error.svg" alt="Upload info icon">File too large. Please upload a photo under 2MB.`;
         uploadInfo.style.color = "hsl(7, 88%, 67%)";
@@ -83,8 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
     resetEmailError();
     const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
     if (email && !emailPattern.test(email)) {
-      emailError.innerHTML = `<img src="/images/icon-info-error.svg" alt="Upload info icon">
-      Please enter a valid email address.`;
+      emailError.innerHTML = `<img src="/images/icon-info-error.svg" alt="Upload info icon">Please enter a valid email address.`;
       emailError.style.color = "hsl(7, 88%, 67%)";
       emailError.style.fontSize = "smaller";
       emailError.style.marginTop = "8px";
@@ -97,7 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
     emailError.innerHTML = "";
   }
   
-  // Remove and change image handlers
+  // Remove and change image event handlers
   removeImageBtn.addEventListener("click", () => {
     fileInput.value = "";
     uploadIcon.innerHTML = `<img src="/images/icon-upload.svg" alt="Upload icon">`;
@@ -118,7 +120,7 @@ document.addEventListener("DOMContentLoaded", () => {
     uploadInfo.style.color = "";
   }
   
-  // Toggle undergraduate level container
+  // Toggle undergraduate level container based on level type
   levelTypeSelect.addEventListener("change", () => {
     if (levelTypeSelect.value === "Undergraduate") {
       undergradContainer.style.display = "block";
@@ -127,7 +129,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
   
-  // Form validation
+  // Form validation function
   function validateForm() {
     let isValid = true;
     if (!fullNameInput.value.trim()) {
@@ -153,7 +155,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return isValid;
   }
   
-  // Generate ticket number using localStorage counter
+  // Generate ticket number using localStorage (simple counter)
   function generateTicketNumber() {
     let ticketCounter = localStorage.getItem("ticketCounter");
     if (!ticketCounter) {
@@ -165,7 +167,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return "#" + ticketCounter.toString().padStart(4, "0");
   }
   
-  // Generate ticket image using html2canvas
+  // Function to capture the ticket section as an image using html2canvas
   async function generateTicketImage() {
     const ticketElement = document.querySelector('.ticket');
     const canvas = await html2canvas(ticketElement, {
@@ -175,12 +177,12 @@ document.addEventListener("DOMContentLoaded", () => {
     return canvas.toDataURL("image/png");
   }
   
-  // Send ticket data to backend (update URL below with your deployed Apps Script URL)
+  // Send ticket data to backend (replace with your actual Apps Script web app URL)
   async function sendTicketData(ticketData) {
     try {
       const response = await fetch("https://script.google.com/macros/s/AKfycbzGoGAzj6iOcLa1B3M_h25rvjKel_zBZZ1xvCa_jzecXfG5tQnWprqmVWbJrMnTeWuLiw/exec", {
         method: "POST",
-        mode: "cors",
+        mode: "no-cors",
         headers: {
           "Content-Type": "application/json",
         },
@@ -197,10 +199,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // Handle form submission
   submitButton.addEventListener("click", async (event) => {
     event.preventDefault();
-    if (!validateForm()) {
-      return;
-    }
-  
+    if (!validateForm()) return;
+    
+    // Generate ticket data
     const ticketNumber = generateTicketNumber();
     const ticketData = {
       fullName: fullNameInput.value.trim(),
@@ -214,7 +215,7 @@ document.addEventListener("DOMContentLoaded", () => {
         ? URL.createObjectURL(fileInput.files[0])
         : "./images/image-avatar.jpg"
     };
-  
+    
     // Update ticket section with user data
     ticketNicknameElem.textContent = ticketData.nickname;
     ticketEmailElem.textContent = ticketData.email;
@@ -222,34 +223,32 @@ document.addEventListener("DOMContentLoaded", () => {
       ? URL.createObjectURL(fileInput.files[0])
       : "./images/image-avatar.jpg";
     ticketNicknameDisplay.textContent = ticketData.nickname;
-    if (ticketData.levelType === "Undergraduate") {
-      ticketLevelElem.textContent = `${ticketData.undergraduateLevel} (Undergraduate)`;
-    } else {
-      ticketLevelElem.textContent = ticketData.levelType;
-    }
+    ticketLevelElem.textContent = (ticketData.levelType === "Undergraduate")
+      ? `${ticketData.undergraduateLevel} (Undergraduate)`
+      : ticketData.levelType;
     ticketThanksgivingElem.textContent = ticketData.thanksgiving
       ? "I'll be Attending Thanksgiving also"
-      : "Not Attending Thanksgiving";
+      : null;
     ticketNumberElem.textContent = ticketData.ticketNumber;
-  
-    // Hide the form section for a clean ticket view
+    
+    // Hide the form section so the ticket is the only thing visible
     formSection.style.display = "none";
-  
+    
     // Show the ticket section and scroll into view
     ticketSection.classList.remove("hidden");
     ticketSection.scrollIntoView({ behavior: "smooth" });
-  
-    // Now, wait a moment to ensure the ticket is fully rendered before capturing it
+    
+    // Wait a bit to ensure the ticket is fully rendered, then capture the screenshot
     setTimeout(async () => {
-      // Generate ticket image (screenshot)
       const ticketImageData = await generateTicketImage();
-      // Update the download link so the user can download the screenshot
       downloadLink.href = ticketImageData;
       downloadLink.download = "TechTrybeGalaTicket.png";
+      // Change the text of the download link to give feedback
+      downloadLink.textContent = "Download Your Ticket Screenshot";
       downloadLink.style.display = "flex";
-    }, 500); // Adjust timeout as needed for your rendering
-  
-    // Send ticket data to the backend
+    }, 500);
+    
+    // Send the ticket data to the backend
     const sent = await sendTicketData(ticketData);
     if (sent) {
       console.log("Ticket data sent successfully.");
@@ -258,13 +257,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
   
-  // Optional: Screenshot button click to manually download ticket
-  // screenShotBtn.addEventListener("click", async () => {
-  //   const ticketImageData = await generateTicketImage();
-  //   // Create a temporary link and click it to download
-  //   const link = document.createElement('a');
-  //   link.href = ticketImageData;
-  //   link.download = 'screenshot.png';
-  //   link.click();
-  // });
+  // Optional: Manual screenshot button (if needed)
+  screenShotBtn.addEventListener("click", async () => {
+    const ticketImageData = await generateTicketImage();
+    const link = document.createElement('a');
+    link.href = ticketImageData;
+    link.download = 'screenshot.png';
+    link.click();
+  });
 });
